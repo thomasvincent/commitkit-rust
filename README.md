@@ -7,13 +7,22 @@ CommitKit is a command-line tool that helps developers create well-structured an
 
 ## Features
 
-- Interactive selection of commit types and scopes
-- Customizable configuration via `.commitkit.toml`
-- Enforcement of maximum subject length
-- Support for multi-line commit bodies
-- Automatic validation of input
-- Optional signed-off commits
-- Cross-platform compatibility
+- **Core Functionality**
+  - Interactive selection of commit types and scopes
+  - Customizable configuration via `.commitkit.toml`
+  - Enforcement of maximum subject length
+  - Support for multi-line commit bodies
+  - Automatic validation of input
+  - Optional signed-off commits
+  - Cross-platform compatibility
+
+- **Enhanced Features**
+  - Emoji support in commit messages (✨, 🐛, etc.)
+  - Commit templates with placeholder substitution
+  - Automatic changelog generation and maintenance
+  - Git hooks for commit message validation and formatting
+  - Commit statistics and analysis
+  - Interactive prompts for template values
 
 ## Installation
 
@@ -63,11 +72,19 @@ USAGE:
     commitkit [OPTIONS]
 
 OPTIONS:
-    -d, --dry-run     Skip git commit and print the message to stdout
-    -v, --verbose     Show verbose output
-    -c, --config      Path to config file (default: .commitkit.toml in current or home directory)
-    -h, --help        Print help information
-    -V, --version     Print version information
+    -d, --dry-run           Skip git commit and print the message to stdout
+    -v, --verbose           Show verbose output
+    -c, --config            Path to config file (default: .commitkit.toml in current or home directory)
+        --emoji             Toggle emoji in commit messages
+        --template          Use a specific commit template
+        --changelog         Update changelog after committing
+        --install-hooks     Install git hooks
+        --stats             Show commit statistics
+        --days              Number of days to analyze for stats (default: all)
+        --validate          Validate a commit message file
+        --prepare-msg       Prepare commit message (used by git hook)
+    -h, --help              Print help information
+    -V, --version           Print version information
 ```
 
 ### Interactive process
@@ -96,6 +113,24 @@ commitkit --config /path/to/custom-config.toml
 
 # Verbose output
 commitkit --verbose
+
+# Use emojis in commit messages
+commitkit --emoji
+
+# Use a template for your commit
+commitkit --template feature
+
+# Automatically update CHANGELOG.md
+commitkit --changelog
+
+# Install git hooks
+commitkit --install-hooks
+
+# Show commit statistics for the last 30 days
+commitkit --stats --days 30
+
+# Validate a commit message
+commitkit --validate .git/COMMIT_EDITMSG
 ```
 
 ## Configuration
@@ -139,8 +174,17 @@ scopes = [
     "deps"
 ]
 
-# Maximum length of the commit subject line
+# Subject line length constraints
 max_subject_len = 72
+min_subject_len = 3
+
+# Feature toggles
+use_emoji = true                      # Add emojis to commit messages
+update_changelog = true               # Update CHANGELOG.md automatically
+validate_commit_msg = true            # Validate commit messages against conventional format
+
+# Templates directory for custom commit templates
+templates_dir = "~/.commitkit/templates"
 ```
 
 ## License

@@ -11,6 +11,7 @@ pub trait Prompter {
     fn prompt_subject(&self, max_length: usize) -> Result<String>;
     fn prompt_body(&self) -> Result<String>;
     fn prompt_footer(&self) -> Result<String>;
+    fn prompt_custom(&self, prompt: &str) -> Result<String>;
 }
 
 /// Terminal-based implementation of the Prompter trait using dialoguer
@@ -117,5 +118,14 @@ impl Prompter for TerminalPrompter {
             .context("Failed to get commit footer")?;
 
         Ok(footer)
+    }
+    
+    fn prompt_custom(&self, prompt: &str) -> Result<String> {
+        let input = Input::<String>::with_theme(&self.theme)
+            .with_prompt(prompt)
+            .interact_text()
+            .context(format!("Failed to get input for: {}", prompt))?;
+
+        Ok(input)
     }
 }

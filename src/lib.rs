@@ -2,6 +2,11 @@ pub mod config;
 pub mod error;
 pub mod git;
 pub mod prompt;
+pub mod emoji;
+pub mod changelog;
+pub mod template;
+pub mod hooks;
+pub mod stats;
 
 /// Builds a commit message from its components
 pub fn build_commit_message(
@@ -39,6 +44,23 @@ pub fn build_commit_message(
     }
     
     message
+}
+
+/// Formats a commit message with optional emoji
+pub fn build_commit_message_with_emoji(
+    prefix: &str,
+    scope: &str,
+    subject: &str,
+    body: &str,
+    footer: &str,
+    use_emoji: bool,
+) -> String {
+    let message = build_commit_message(prefix, scope, subject, body, footer);
+    if use_emoji {
+        emoji::apply_emoji(prefix, &message, true)
+    } else {
+        message
+    }
 }
 
 #[cfg(test)]

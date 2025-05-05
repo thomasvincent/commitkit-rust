@@ -29,5 +29,14 @@ scopes = [
     "tests"
 ]
 
-# Maximum length of the commit subject line
+# Subject line length constraints
 max_subject_len = 72
+min_subject_len = 3
+
+# Feature toggles
+use_emoji = true                       # Add emojis to commit messages
+update_changelog = true                # Update CHANGELOG.md automatically
+validate_commit_msg = true            # Validate commit messages against the conventional format
+
+# Templates directory for custom commit templates
+templates_dir = "~/.commitkit/templates"

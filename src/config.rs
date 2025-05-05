@@ -10,6 +10,29 @@ pub struct Config {
     pub prefixes: Vec<Prefix>,
     pub scopes: Vec<String>,
     pub max_subject_len: usize,
+    #[serde(default = "default_min_subject_len")]
+    pub min_subject_len: usize,
+    #[serde(default)]
+    pub use_emoji: bool,
+    #[serde(default)]
+    pub update_changelog: bool,
+    #[serde(default = "default_templates_dir")]
+    pub templates_dir: String,
+    #[serde(default)]
+    pub validate_commit_msg: bool,
+}
+
+fn default_min_subject_len() -> usize {
+    3
+}
+
+fn default_templates_dir() -> String {
+    home_dir()
+        .unwrap_or_else(|| PathBuf::from("."))
+        .join(".commitkit")
+        .join("templates")
+        .to_string_lossy()
+        .to_string()
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -92,8 +115,17 @@ scopes = [
     "deps"
 ]
 
-# Maximum length of the commit subject line
+# Subject line length constraints
 max_subject_len = 72
+min_subject_len = 3
+
+# Feature toggles
+use_emoji = true
+update_changelog = true
+validate_commit_msg = true
+
+# Template directory (defaults to ~/.commitkit/templates)
+# templates_dir = "~/.commitkit/templates"
 "#.to_string()
     }
 }
