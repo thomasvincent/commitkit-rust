@@ -1,7 +1,11 @@
 # CommitKit
 
-[![Rust](https://img.shields.io/badge/Rust-1.x-orange)](https://www.rust-lang.org/)
+[![CI](https://github.com/thomasvincent/commitkit-rust/actions/workflows/ci.yml/badge.svg)](https://github.com/thomasvincent/commitkit-rust/actions/workflows/ci.yml)
+[![Crates.io](https://img.shields.io/crates/v/commitkit.svg)](https://crates.io/crates/commitkit)
+[![Documentation](https://docs.rs/commitkit/badge.svg)](https://docs.rs/commitkit)
+[![Rust](https://img.shields.io/badge/rust-1.70%2B-orange)](https://www.rust-lang.org/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196)](https://conventionalcommits.org)
 
 CommitKit is a command-line tool that helps developers create well-structured and consistent commit messages following the [Conventional Commits](https://www.conventionalcommits.org/) specification. It provides an interactive interface to guide users through the process of constructing a commit message with a type, optional scope, subject, body, and footer.
 

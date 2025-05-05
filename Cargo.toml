@@ -5,10 +5,19 @@ authors = ["Thomas Vincent"]
 edition = "2021"
 description = "A CLI tool for creating conventional commits"
 repository = "https://github.com/thomasvincent/commitkit-rust"
+documentation = "https://docs.rs/commitkit"
 license = "MIT"
 readme = "README.md"
-keywords = ["git", "commit", "conventional-commits"]
+keywords = ["git", "commit", "conventional-commits", "cli", "development"]
 categories = ["command-line-utilities", "development-tools"]
+rust-version = "1.70.0"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 clap = { version = "4.4", features = ["derive"] }

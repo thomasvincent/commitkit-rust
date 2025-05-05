@@ -7,6 +7,10 @@ pub mod changelog;
 pub mod template;
 pub mod hooks;
 pub mod stats;
+pub mod version;
+
+#[cfg(test)]
+pub mod tests;
 
 /// Builds a commit message from its components
 pub fn build_commit_message(

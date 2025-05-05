@@ -6,11 +6,60 @@ on:
       - 'v*'
 
 jobs:
-  create-release:
-    name: Create Release
+  # Validate version matches tag
+  verify-version:
+    name: Verify version matches tag
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      
+      - name: Get tag version
+        id: get_tag
+        run: echo "TAG_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      
+      - name: Get Cargo.toml version
+        id: get_cargo_version
+        run: echo "CARGO_VERSION=$(grep -m1 -oP '^version = "\K[^"]+' Cargo.toml)" >> $GITHUB_OUTPUT
+      
+      - name: Verify versions match
+        run: |
+          if [ "${{ steps.get_tag.outputs.TAG_VERSION }}" != "${{ steps.get_cargo_version.outputs.CARGO_VERSION }}" ]; then
+            echo "Error: Tag version ${{ steps.get_tag.outputs.TAG_VERSION }} does not match Cargo.toml version ${{ steps.get_cargo_version.outputs.CARGO_VERSION }}"
+            exit 1
+          fi
+
+  # Create GitHub Release
+  create-release:
+    name: Create GitHub Release
+    needs: verify-version
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Get version from tag
+        id: get_version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      
+      - name: Generate changelog
+        id: changelog
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -z "$PREV_TAG" ]; then
+            # If this is the first tag, get all commits
+            git log --pretty=format:"- %s" > CHANGELOG_LATEST.md
+          else
+            # Otherwise get commits since the previous tag
+            git log --pretty=format:"- %s" $PREV_TAG..HEAD > CHANGELOG_LATEST.md
+          fi
+          echo "RELEASE_BODY<<EOF" >> $GITHUB_ENV
+          cat CHANGELOG_LATEST.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -18,65 +67,106 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          release_name: Release v${{ steps.get_version.outputs.version }}
+          body: ${{ env.RELEASE_BODY }}
           draft: false
           prerelease: false
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
 
+  # Build binaries for multiple platforms
   build-release:
-    name: Build Release
+    name: Build and upload release assets
     needs: create-release
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
         include:
           - os: ubuntu-latest
-            artifact_name: commitkit
+            target: x86_64-unknown-linux-gnu
             asset_name: commitkit-linux-amd64
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            asset_name: commitkit-linux-arm64
           - os: windows-latest
-            artifact_name: commitkit.exe
+            target: x86_64-pc-windows-msvc
             asset_name: commitkit-windows-amd64.exe
-          - os: macOS-latest
-            artifact_name: commitkit
+          - os: macos-latest
+            target: x86_64-apple-darwin
             asset_name: commitkit-macos-amd64
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            asset_name: commitkit-macos-arm64
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: stable
-          override: true
+          target: ${{ matrix.target }}
+      
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+      
+      - name: Install cross-compilation tools
+        if: contains(matrix.target, 'aarch64-unknown-linux')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+      
       - name: Build
-        run: cargo build --release
+        run: cargo build --release --target ${{ matrix.target }}
+      
+      - name: Rename binary for upload
+        shell: bash
+        run: |
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            cp target/${{ matrix.target }}/release/commitkit.exe ./${{ matrix.asset_name }}
+          else
+            cp target/${{ matrix.target }}/release/commitkit ./${{ matrix.asset_name }}
+            chmod +x ./${{ matrix.asset_name }}
+          fi
+      
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./target/release/${{ matrix.artifact_name }}
+          asset_path: ./${{ matrix.asset_name }}
           asset_name: ${{ matrix.asset_name }}
           asset_content_type: application/octet-stream
 
+  # Publish to crates.io
   publish-crate:
     name: Publish to crates.io
-    needs: build-release
+    needs: [create-release, build-release]
     runs-on: ubuntu-latest
+    if: github.repository == 'thomasvincent/commitkit-rust' # Only publish from the original repo
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: stable
-          override: true
+      
+      - name: Verify Cargo.toml
+        run: |
+          if ! grep -q "authors" Cargo.toml; then
+            echo "Error: Missing required field in Cargo.toml: authors"
+            exit 1
+          fi
+          if ! grep -q "license" Cargo.toml; then
+            echo "Error: Missing required field in Cargo.toml: license"
+            exit 1
+          fi
+          if ! grep -q "description" Cargo.toml; then
+            echo "Error: Missing required field in Cargo.toml: description"
+            exit 1
+          fi
+      
       - name: Login to crates.io
-        uses: actions-rs/cargo@v1
-        with:
-          command: login
-          args: ${{ secrets.CRATES_IO_TOKEN }}
-      - name: Publish
-        uses: actions-rs/cargo@v1
-        with:
-          command: publish
+        run: cargo login ${{ secrets.CRATES_IO_TOKEN }}
+      
+      - name: Publish to crates.io
+        run: cargo publish --allow-dirty

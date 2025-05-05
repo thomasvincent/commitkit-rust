@@ -8,7 +8,7 @@ use commitkit::prompt::{Prompter, TerminalPrompter};
 
 /// CLI tool for creating conventional commits
 #[derive(Parser, Debug)]
-#[clap(author, version, about)]
+#[clap(author, version = commitkit::version::version_string(), about, long_about = None)]
 struct Args {
     /// Skip git commit and print the message to stdout
     #[clap(short, long)]

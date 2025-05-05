@@ -1,0 +1,7 @@
+# Clippy configuration
+
+# Allow longer numeric literal suffixes for readability
+# disallow-numerical-literals-in-assert-eq = { skip-suffixes = ["u64", "usize"] }
+
+# Cyclomatic complexity threshold
+# cognitive-complexity-threshold = 20

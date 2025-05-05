@@ -1,76 +1,120 @@
 # Contributing to CommitKit
 
-Thank you for considering contributing to CommitKit! This document provides guidelines and instructions for contributing.
+Thank you for considering contributing to CommitKit! This document provides guidelines and instructions for contributing to make the process smooth for everyone.
 
 ## Code of Conduct
 
-Please be respectful and considerate of others when contributing to this project.
+By participating in this project, you agree to abide by our Code of Conduct. Please be respectful and considerate of others.
 
-## How to Contribute
+## Getting Started
 
-### Reporting Bugs
-
-If you find a bug, please create an issue with the following information:
-
-1. A clear, descriptive title
-2. A detailed description of the issue
-3. Steps to reproduce the bug
-4. Expected and actual behavior
-5. Any relevant logs or screenshots
-6. Your environment (OS, Rust version, etc.)
-
-### Suggesting Features
-
-Feature suggestions are welcome! Please create an issue with:
-
-1. A clear, descriptive title
-2. A detailed description of the proposed feature
-3. Any relevant examples or mockups
-4. Why this feature would be useful to the project
-
-### Pull Requests
-
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Run the tests (`cargo test`)
-5. Format your code (`cargo fmt`)
-6. Check for linting issues (`cargo clippy`)
-7. Commit your changes using conventional commit format:
+1. **Fork the repository** on GitHub
+2. **Clone your fork**:
+   ```sh
+   git clone https://github.com/your-username/commitkit-rust.git
+   cd commitkit-rust
    ```
-   type(scope): subject
-   
-   body
-   
-   footer
+3. **Set up the development environment**:
+   ```sh
+   cargo build
    ```
-8. Push to your branch (`git push origin feature/amazing-feature`)
-9. Open a Pull Request
+4. **Create a branch** for your changes:
+   ```sh
+   git checkout -b feature/amazing-feature
+   ```
 
-## Development Setup
+## Development Workflow
 
-1. Install Rust (https://www.rust-lang.org/tools/install)
-2. Clone the repository
-3. Build the project: `cargo build`
-4. Run tests: `cargo test`
+### Running Tests
 
-## Project Structure
+Run the tests to make sure everything works:
 
-- `src/main.rs` - Entry point and CLI handling
-- `src/lib.rs` - Library functionality and tests
-- `src/config.rs` - Configuration handling
-- `src/error.rs` - Error types
-- `src/git.rs` - Git operations
-- `src/prompt.rs` - User prompting
+```sh
+cargo test
+```
 
-## Coding Guidelines
+### Code Formatting
 
-- Follow Rust's standard style guide (enforced by `rustfmt`)
-- Use meaningful variable and function names
-- Write descriptive comments
-- Add tests for new functionality
-- Keep functions small and focused
+Run rustfmt to ensure your code is properly formatted:
 
-## License
+```sh
+cargo fmt
+```
 
-By contributing, you agree that your contributions will be licensed under the project's MIT License.
+### Linting
+
+Check for potential issues with clippy:
+
+```sh
+cargo clippy -- -D warnings
+```
+
+## Conventional Commits
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) for commit messages. The format is:
+
+```
+<type>([optional scope]): <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+Types include:
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation changes
+- `style`: Changes that do not affect code meaning
+- `refactor`: Code changes that neither fix a bug nor add a feature
+- `perf`: Performance improvements
+- `test`: Adding or fixing tests
+- `build`: Changes to the build system or dependencies
+- `ci`: Changes to CI configuration
+- `chore`: Other changes that don't modify source files
+- `revert`: Revert a previous commit
+
+Examples:
+```
+feat(cli): add support for custom templates
+fix(parser): handle empty commit messages
+docs: update installation instructions
+```
+
+## Pull Request Process
+
+1. **Update the README.md** if necessary with details of changes to the interface.
+2. **Add tests** for new functionality.
+3. **Update the CHANGELOG.md** with details of your changes under the "Unreleased" section.
+4. **Submit your pull request** against the `main` branch.
+5. The pull request must **pass all CI checks**.
+6. Your pull request will be reviewed by maintainers who may suggest changes.
+
+## Release Process
+
+Releases are managed by maintainers using the following process:
+
+1. Determine the appropriate version bump based on [Semantic Versioning](https://semver.org/).
+2. Use the "Semantic Versioning" GitHub Action workflow to create a new version.
+3. The workflow will automatically:
+   - Update the version in Cargo.toml
+   - Update CHANGELOG.md
+   - Commit and tag the changes
+   - Push the changes to GitHub
+   - Trigger the release workflow
+
+## Documentation
+
+Good documentation is crucial. When adding new features, please add appropriate documentation:
+
+- Code comments explaining "why" not "what"
+- Update README.md with usage instructions if applicable
+- Update CHANGELOG.md with a description of your changes
+
+## Community
+
+For questions or discussions, please use GitHub Discussions.
+
+---
+
+Thank you for contributing to CommitKit!

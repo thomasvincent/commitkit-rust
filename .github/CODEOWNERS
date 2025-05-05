@@ -1,0 +1,10 @@
+# These owners will be the default owners for everything in the repo
+# unless a later match takes precedence.
+* @thomasvincent
+
+# Cargo related files
+Cargo.toml @thomasvincent
+Cargo.lock @thomasvincent
+
+# CI/CD workflows
+.github/workflows/ @thomasvincent
