@@ -1,0 +1,31 @@
+# CommitKit Configuration
+
+# Whether to add a Signed-off-by line to commits (-s flag)
+sign_off_commits = false
+
+# Commit message prefixes following Conventional Commits specification
+prefixes = [
+    { title = "feat", description = "A new feature" },
+    { title = "fix", description = "A bug fix" },
+    { title = "docs", description = "Documentation changes" },
+    { title = "style", description = "Changes that do not affect code meaning" },
+    { title = "refactor", description = "Code change that neither fixes a bug nor adds a feature" },
+    { title = "perf", description = "Code change that improves performance" },
+    { title = "test", description = "Adding missing tests or correcting existing tests" },
+    { title = "build", description = "Changes that affect the build system or external dependencies" },
+    { title = "ci", description = "Changes to CI configuration files and scripts" },
+    { title = "chore", description = "Other changes that don't modify src or test files" },
+    { title = "revert", description = "Reverts a previous commit" }
+]
+
+# Optional scopes to categorize changes
+scopes = [
+    "core",
+    "ui",
+    "cli",
+    "config",
+    "git"
+]
+
+# Maximum length of the commit subject line
+max_subject_len = 72

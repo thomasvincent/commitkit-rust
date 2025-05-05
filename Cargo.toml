@@ -1,0 +1,21 @@
+[package]
+name = "commitkit"
+version = "0.1.0"
+authors = ["Thomas Vincent"]
+edition = "2021"
+description = "A CLI tool for creating conventional commits"
+repository = "https://github.com/thomasvincent/commitkit-rust"
+license = "MIT"
+readme = "README.md"
+keywords = ["git", "commit", "conventional-commits"]
+categories = ["command-line-utilities", "development-tools"]
+
+[dependencies]
+clap = { version = "4.4", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+thiserror = "1.0"
+home = "0.5"
+anyhow = "1.0"
+dialoguer = "0.11"
+console = "0.15"
