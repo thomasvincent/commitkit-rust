@@ -11,6 +11,10 @@ updates:
     labels:
       - "dependencies"
     open-pull-requests-limit: 10
+    assignees:
+      - "thomasvincent"
+    reviewers:
+      - "thomasvincent"
 
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
@@ -23,3 +27,8 @@ updates:
     labels:
       - "dependencies"
       - "ci"
+    assignees:
+      - "thomasvincent"
+    reviewers:
+      - "thomasvincent"
+    open-pull-requests-limit: 10
