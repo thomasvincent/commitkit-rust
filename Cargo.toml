@@ -10,7 +10,7 @@ license = "MIT"
 readme = "README.md"
 keywords = ["git", "commit", "conventional-commits", "cli", "development"]
 categories = ["command-line-utilities", "development-tools"]
-rust-version = "1.70.0"
+rust-version = "1.85.0"
 
 [badges]
 maintenance = { status = "actively-developed" }
