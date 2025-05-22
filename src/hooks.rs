@@ -219,10 +219,8 @@ impl CommitMessageValidator {
         }
 
         // Validate scope if required
-        if self.validate_scope {
-            if captures.get(3).is_none() {
-                return Err(ValidationError::InvalidScope);
-            }
+        if self.validate_scope && captures.get(3).is_none() {
+            return Err(ValidationError::InvalidScope);
         }
 
         // Validate subject text

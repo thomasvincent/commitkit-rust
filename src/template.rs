@@ -56,7 +56,7 @@ impl TemplateManager {
             let path = entry.path();
 
             // Only process .toml files
-            if path.is_file() && path.extension().map_or(false, |ext| ext == "toml") {
+            if path.is_file() && path.extension().is_some_and(|ext| ext == "toml") {
                 self.load_template_file(&path)?;
             }
         }
@@ -148,7 +148,7 @@ impl TemplateManager {
 
     /// Delete a template
     pub fn delete_template(&mut self, name: &str) -> Result<()> {
-        if let Some(_) = self.templates.remove(name) {
+        if self.templates.remove(name).is_some() {
             let file_path = self.template_dir.join(format!("{}.toml", name));
 
             if file_path.exists() {

@@ -43,7 +43,7 @@ pub fn build_commit_message(
         if !body.is_empty() && !body.ends_with('\n') {
             message.push('\n');
         }
-        message.push_str("\n");
+        message.push('\n');
         message.push_str(footer);
     }
 
@@ -68,7 +68,7 @@ pub fn build_commit_message_with_emoji(
 }
 
 #[cfg(test)]
-mod tests {
+mod inline_tests {
     use super::*;
 
     #[test]
