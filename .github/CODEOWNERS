@@ -1,10 +1,26 @@
-# These owners will be the default owners for everything in the repo
-# unless a later match takes precedence.
+# Global code ownership - Thomas Vincent owns all code
 * @thomasvincent
 
-# Cargo related files
+# Rust-specific files
+*.rs @thomasvincent
 Cargo.toml @thomasvincent
 Cargo.lock @thomasvincent
+build.rs @thomasvincent
 
-# CI/CD workflows
+# Configuration files
+.github/ @thomasvincent
+.pre-commit-config.yaml @thomasvincent
+rustfmt.toml @thomasvincent
+
+# Docker files
+Dockerfile @thomasvincent
+docker-compose.yml @thomasvincent
+
+# CI/CD and automation
 .github/workflows/ @thomasvincent
+.github/dependabot.yml @thomasvincent
+
+# Documentation
+README.md @thomasvincent
+docs/ @thomasvincent
+*.md @thomasvincent
