@@ -1,0 +1,14 @@
+# Google Rust Style Guide Configuration (Stable Features Only)
+# Based on: https://google.github.io/comprehensive-rust/
+
+# Line length and wrapping
+max_width = 100
+hard_tabs = false
+tab_spaces = 4
+
+# Function formatting
+fn_params_layout = "Tall"
+
+# String literals and misc
+newline_style = "Unix"
+edition = "2021"

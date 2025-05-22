@@ -67,7 +67,10 @@ impl Config {
     fn find_config_file() -> PathBuf {
         let current_dir = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
 
-        let config_paths = [current_dir.join(".commitkit.toml"), Self::home_config_path()];
+        let config_paths = [
+            current_dir.join(".commitkit.toml"),
+            Self::home_config_path(),
+        ];
 
         config_paths
             .iter()
