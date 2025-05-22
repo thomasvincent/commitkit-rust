@@ -1,7 +1,7 @@
 use anyhow::{Context, Result};
 use std::fs;
-use std::path::{Path, PathBuf};
 use std::os::unix::fs::PermissionsExt;
+use std::path::{Path, PathBuf};
 
 pub struct GitHookManager {
     repo_path: PathBuf,
@@ -40,21 +40,19 @@ impl GitHookManager {
 if command -v commitkit > /dev/null 2>&1; then
     # Save the original commit message
     ORIG_MSG=$(cat "$1")
-    
+
     # Run commitkit in prepare-msg mode
     # This will read any existing message and enhance it if needed
     commitkit --prepare-msg "$ORIG_MSG" > "$1"
 fi
 "#;
 
-        fs::write(&hook_path, hook_content)
-            .context("Failed to write prepare-commit-msg hook")?;
+        fs::write(&hook_path, hook_content).context("Failed to write prepare-commit-msg hook")?;
 
         // Make the hook executable
         let mut perms = fs::metadata(&hook_path)?.permissions();
         perms.set_mode(0o755); // rwxr-xr-x
-        fs::set_permissions(&hook_path, perms)
-            .context("Failed to set hook permissions")?;
+        fs::set_permissions(&hook_path, perms).context("Failed to set hook permissions")?;
 
         Ok(())
     }
@@ -82,14 +80,12 @@ fi
 exit 0
 "#;
 
-        fs::write(&hook_path, hook_content)
-            .context("Failed to write commit-msg hook")?;
+        fs::write(&hook_path, hook_content).context("Failed to write commit-msg hook")?;
 
         // Make the hook executable
         let mut perms = fs::metadata(&hook_path)?.permissions();
         perms.set_mode(0o755); // rwxr-xr-x
-        fs::set_permissions(&hook_path, perms)
-            .context("Failed to set hook permissions")?;
+        fs::set_permissions(&hook_path, perms).context("Failed to set hook permissions")?;
 
         Ok(())
     }
@@ -97,24 +93,22 @@ exit 0
     /// Remove a git hook
     pub fn remove_hook(&self, hook_name: &str) -> Result<()> {
         let hook_path = self.hooks_dir().join(hook_name);
-        
+
         if hook_path.exists() {
-            fs::remove_file(&hook_path)
-                .context(format!("Failed to remove {} hook", hook_name))?;
+            fs::remove_file(&hook_path).context(format!("Failed to remove {} hook", hook_name))?;
         }
-        
+
         Ok(())
     }
 
     /// Ensure the hooks directory exists
     fn ensure_hook_directory(&self) -> Result<()> {
         let hooks_dir = self.hooks_dir();
-        
+
         if !hooks_dir.exists() {
-            fs::create_dir_all(&hooks_dir)
-                .context("Failed to create hooks directory")?;
+            fs::create_dir_all(&hooks_dir).context("Failed to create hooks directory")?;
         }
-        
+
         Ok(())
     }
 
@@ -127,12 +121,12 @@ exit 0
     /// Find the root of the Git repository from any subdirectory
     pub fn find_repo_root(start_dir: &Path) -> Option<PathBuf> {
         let mut current = start_dir.to_path_buf();
-        
+
         loop {
             if current.join(".git").exists() {
                 return Some(current);
             }
-            
+
             if !current.pop() {
                 return None;
             }
@@ -246,8 +240,8 @@ impl CommitMessageValidator {
 
     /// Validate a commit message file
     pub fn validate_file<P: AsRef<Path>>(&self, path: P) -> Result<(), ValidationError> {
-        let content = fs::read_to_string(path.as_ref())
-            .map_err(|_| ValidationError::InvalidFormat)?;
+        let content =
+            fs::read_to_string(path.as_ref()).map_err(|_| ValidationError::InvalidFormat)?;
 
         self.validate(&content)
     }

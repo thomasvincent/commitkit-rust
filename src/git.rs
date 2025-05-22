@@ -11,7 +11,7 @@ pub fn run_git_commit(message: &str, sign_off: bool) -> Result<()> {
         .arg(message)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped());
-    
+
     if sign_off {
         command.arg("-s");
     }
@@ -19,10 +19,10 @@ pub fn run_git_commit(message: &str, sign_off: bool) -> Result<()> {
     let output = command
         .output()
         .context("Failed to execute git commit command")?;
-    
+
     io::stdout().write_all(&output.stdout)?;
     io::stderr().write_all(&output.stderr)?;
-    
+
     if output.status.success() {
         Ok(())
     } else {
@@ -39,7 +39,7 @@ pub fn is_git_repo() -> Result<bool> {
         .args(["rev-parse", "--is-inside-work-tree"])
         .output()
         .context("Failed to execute git command")?;
-    
+
     Ok(output.status.success())
 }
 
@@ -49,7 +49,7 @@ pub fn has_staged_changes() -> Result<bool> {
         .args(["diff", "--cached", "--quiet"])
         .status()
         .context("Failed to check for staged changes")?;
-    
+
     // Exit code 1 means there are differences (staged changes),
     // Exit code 0 means no differences (no staged changes)
     Ok(!output.success())

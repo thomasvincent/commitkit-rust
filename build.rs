@@ -43,7 +43,7 @@ pub const GIT_DATE: Option<&str> = {};
 
 fn get_git_hash() -> Option<String> {
     Command::new("git")
-        .args(&["rev-parse", "--short", "HEAD"])
+        .args(["rev-parse", "--short", "HEAD"])
         .output()
         .ok()
         .and_then(|output| {
@@ -59,7 +59,7 @@ fn get_git_hash() -> Option<String> {
 
 fn get_git_date() -> Option<String> {
     Command::new("git")
-        .args(&["log", "-1", "--format=%cd", "--date=short"])
+        .args(["log", "-1", "--format=%cd", "--date=short"])
         .output()
         .ok()
         .and_then(|output| {

@@ -1,7 +1,7 @@
-/// Version information for the crate
-///
-/// This module contains version information about the crate, including the version from
-/// Cargo.toml and git information when available.
+//! Version information for the crate
+//!
+//! This module contains version information about the crate, including the version from
+//! Cargo.toml and git information when available.
 
 // Include the generated version info
 include!(concat!(env!("OUT_DIR"), "/version_info.rs"));

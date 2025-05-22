@@ -9,38 +9,38 @@ use tempfile::TempDir;
 pub fn create_test_config(content: &str) -> (TempDir, PathBuf) {
     let temp_dir = TempDir::new().expect("Failed to create temp dir");
     let config_path = temp_dir.path().join(".commitkit.toml");
-    
+
     fs::write(&config_path, content).expect("Failed to write test config");
-    
+
     (temp_dir, config_path)
 }
 
 /// Test helper for creating a temporary git repository
 pub fn setup_test_repo() -> TempDir {
     let temp_dir = TempDir::new().expect("Failed to create temp dir");
-    
+
     // Initialize git repo
     let status = std::process::Command::new("git")
         .args(&["init"])
         .current_dir(temp_dir.path())
         .status()
         .expect("Failed to run git init");
-    
+
     assert!(status.success(), "Failed to initialize git repository");
-    
+
     // Configure git for tests
     std::process::Command::new("git")
         .args(&["config", "user.name", "Test User"])
         .current_dir(temp_dir.path())
         .status()
         .expect("Failed to configure git user name");
-    
+
     std::process::Command::new("git")
         .args(&["config", "user.email", "test@example.com"])
         .current_dir(temp_dir.path())
         .status()
         .expect("Failed to configure git user email");
-    
+
     temp_dir
 }
 
@@ -51,11 +51,11 @@ where
 {
     let temp_dir = TempDir::new().expect("Failed to create temp dir");
     let old_dir = env::current_dir().expect("Failed to get current directory");
-    
+
     env::set_current_dir(temp_dir.path()).expect("Failed to change to temp dir");
     let result = f(temp_dir.path());
     env::set_current_dir(old_dir).expect("Failed to restore directory");
-    
+
     result
 }
 

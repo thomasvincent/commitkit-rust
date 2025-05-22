@@ -44,7 +44,7 @@ pub struct Prefix {
 impl Config {
     pub fn load() -> Result<Self> {
         let config_path = Self::find_config_file();
-        
+
         let config_str = match fs::read_to_string(&config_path) {
             Ok(content) => content,
             Err(_) => {
@@ -57,7 +57,7 @@ impl Config {
                     }
                 }
                 default_config
-            },
+            }
         };
 
         toml::from_str(&config_str)
@@ -66,11 +66,8 @@ impl Config {
 
     fn find_config_file() -> PathBuf {
         let current_dir = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
-        
-        let config_paths = [
-            current_dir.join(".commitkit.toml"),
-            Self::home_config_path(),
-        ];
+
+        let config_paths = [current_dir.join(".commitkit.toml"), Self::home_config_path()];
 
         config_paths
             .iter()

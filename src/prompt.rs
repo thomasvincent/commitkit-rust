@@ -1,6 +1,6 @@
 use anyhow::{Context, Result};
 use console::style;
-use dialoguer::{Input, Select, theme::ColorfulTheme};
+use dialoguer::{theme::ColorfulTheme, Input, Select};
 
 use crate::config::Prefix;
 
@@ -76,7 +76,7 @@ impl Prompter for TerminalPrompter {
 
     fn prompt_subject(&self, max_length: usize) -> Result<String> {
         let prompt = format!("Enter commit subject (max {} characters)", max_length);
-        
+
         let subject = Input::with_theme(&self.theme)
             .with_prompt(&prompt)
             .validate_with(|input: &String| -> Result<(), &str> {
@@ -95,18 +95,24 @@ impl Prompter for TerminalPrompter {
     }
 
     fn prompt_body(&self) -> Result<String> {
-        println!("{}", style("Enter commit body (leave empty to skip):").bold());
-        println!("{}", style("Press Ctrl+D (Unix) or Ctrl+Z (Windows) followed by Enter when done.").dim());
-        
+        println!(
+            "{}",
+            style("Enter commit body (leave empty to skip):").bold()
+        );
+        println!(
+            "{}",
+            style("Press Ctrl+D (Unix) or Ctrl+Z (Windows) followed by Enter when done.").dim()
+        );
+
         let mut body = String::new();
         let stdin = std::io::stdin();
-        
+
         while let Ok(n) = stdin.read_line(&mut body) {
             if n == 0 || body.trim().is_empty() {
                 break;
             }
         }
-        
+
         Ok(body.trim().to_string())
     }
 
@@ -119,7 +125,7 @@ impl Prompter for TerminalPrompter {
 
         Ok(footer)
     }
-    
+
     fn prompt_custom(&self, prompt: &str) -> Result<String> {
         let input = Input::<String>::with_theme(&self.theme)
             .with_prompt(prompt)
