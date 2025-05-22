@@ -29,7 +29,7 @@ array_width = 100
 use_small_heuristics = "Default"
 
 # Controls the maximum width for string literals
-max_width = 100
+string_width = 100
 
 # Place a trailing comma whenever multiline arrays and function arguments would span more than one line
 trailing_comma = "Vertical"

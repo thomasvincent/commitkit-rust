@@ -4,10 +4,7 @@ use std::path::Path;
 use std::process::Command;
 
 fn main() {
-    // Only run if not on CI
-    if env::var("CI").is_ok() {
-        return;
-    }
+    // Always generate version info, but handle CI environment gracefully
 
     // Tell cargo to rerun this build script if Cargo.toml changes
     println!("cargo:rerun-if-changed=Cargo.toml");
