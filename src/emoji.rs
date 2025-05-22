@@ -33,7 +33,8 @@ pub fn apply_emoji(commit_type: &str, message: &str, use_emoji: bool) -> String 
         // Find the position after ":" in the commit message
         if let Some(pos) = message.find(':') {
             let (prefix, rest) = message.split_at(pos + 1);
-            return format!("{} {} {}", prefix, emoji, rest);
+            let trimmed_rest = rest.trim_start();
+            return format!("{} {} {}", prefix, emoji, trimmed_rest);
         }
     }
 

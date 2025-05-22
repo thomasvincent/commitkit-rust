@@ -43,6 +43,9 @@ impl CommitAnalyzer {
         let output = cmd.output().context("Failed to run git log")?;
         let output_str = String::from_utf8_lossy(&output.stdout);
 
+        // Compile regex once outside the loop
+        let re = regex::Regex::new(r"^(\w+)(?:\(([\w-]+)\))?: .+$").unwrap();
+
         // Process each commit
         for line in output_str.lines() {
             if line.is_empty() {
@@ -60,7 +63,6 @@ impl CommitAnalyzer {
             let subject = parts[4];
 
             // Extract commit type and scope using regex
-            let re = regex::Regex::new(r"^(\w+)(?:\(([\w-]+)\))?: .+$").unwrap();
             if let Some(captures) = re.captures(subject) {
                 let commit_type = captures.get(1).map_or("", |m| m.as_str()).to_string();
 

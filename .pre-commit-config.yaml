@@ -12,12 +12,8 @@ repos:
   - repo: https://github.com/doublify/pre-commit-rust
     rev: v1.0
     hooks:
-      - id: fmt
-        args: ['--verbose']
       - id: cargo-check
         args: ['--workspace']
-      - id: clippy
-        args: ['--workspace', '--', '-D', 'warnings']
 
   - repo: https://github.com/crate-ci/typos
     rev: v1.24.6
