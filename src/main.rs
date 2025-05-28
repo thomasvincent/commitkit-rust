@@ -341,10 +341,10 @@ fn create_template_commit(
     // From subject template
     for cap in re.captures_iter(&template.subject_template) {
         let placeholder = cap[1].to_string();
-        if !values.contains_key(&placeholder) {
-            let prompt = format!("Enter value for {}: ", placeholder);
+        if let std::collections::hash_map::Entry::Vacant(e) = values.entry(placeholder) {
+            let prompt = format!("Enter value for {}: ", e.key());
             let value = prompter.prompt_custom(&prompt)?;
-            values.insert(placeholder, value);
+            e.insert(value);
         }
     }
 
@@ -352,10 +352,10 @@ fn create_template_commit(
     if let Some(body_tpl) = &template.body_template {
         for cap in re.captures_iter(body_tpl) {
             let placeholder = cap[1].to_string();
-            if !values.contains_key(&placeholder) {
-                let prompt = format!("Enter value for {}: ", placeholder);
+            if let std::collections::hash_map::Entry::Vacant(e) = values.entry(placeholder) {
+                let prompt = format!("Enter value for {}: ", e.key());
                 let value = prompter.prompt_custom(&prompt)?;
-                values.insert(placeholder, value);
+                e.insert(value);
             }
         }
     }
@@ -364,10 +364,10 @@ fn create_template_commit(
     if let Some(footer_tpl) = &template.footer_template {
         for cap in re.captures_iter(footer_tpl) {
             let placeholder = cap[1].to_string();
-            if !values.contains_key(&placeholder) {
-                let prompt = format!("Enter value for {}: ", placeholder);
+            if let std::collections::hash_map::Entry::Vacant(e) = values.entry(placeholder) {
+                let prompt = format!("Enter value for {}: ", e.key());
                 let value = prompter.prompt_custom(&prompt)?;
-                values.insert(placeholder, value);
+                e.insert(value);
             }
         }
     }

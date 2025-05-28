@@ -1,5 +1,6 @@
 use anyhow::{Context, Result};
 use std::fs;
+#[cfg(unix)]
 use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 
@@ -50,9 +51,12 @@ fi
         fs::write(&hook_path, hook_content).context("Failed to write prepare-commit-msg hook")?;
 
         // Make the hook executable
-        let mut perms = fs::metadata(&hook_path)?.permissions();
-        perms.set_mode(0o755); // rwxr-xr-x
-        fs::set_permissions(&hook_path, perms).context("Failed to set hook permissions")?;
+        #[cfg(unix)]
+        {
+            let mut perms = fs::metadata(&hook_path)?.permissions();
+            perms.set_mode(0o755); // rwxr-xr-x
+            fs::set_permissions(&hook_path, perms).context("Failed to set hook permissions")?;
+        }
 
         Ok(())
     }
@@ -83,9 +87,12 @@ exit 0
         fs::write(&hook_path, hook_content).context("Failed to write commit-msg hook")?;
 
         // Make the hook executable
-        let mut perms = fs::metadata(&hook_path)?.permissions();
-        perms.set_mode(0o755); // rwxr-xr-x
-        fs::set_permissions(&hook_path, perms).context("Failed to set hook permissions")?;
+        #[cfg(unix)]
+        {
+            let mut perms = fs::metadata(&hook_path)?.permissions();
+            perms.set_mode(0o755); // rwxr-xr-x
+            fs::set_permissions(&hook_path, perms).context("Failed to set hook permissions")?;
+        }
 
         Ok(())
     }
